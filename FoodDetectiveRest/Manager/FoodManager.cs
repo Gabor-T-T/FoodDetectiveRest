@@ -12,7 +12,7 @@ namespace FoodDetectiveRest.Manager
         public List<FoodFamily> _foods = new List<FoodFamily>();
 
 
-        public List<FoodFamily> GetFood()
+        public List<RecognitionResult> GetFood()
         {
             
             var client = new RestClient("https://api.logmeal.es/v2/recognition/dish");
@@ -20,13 +20,13 @@ namespace FoodDetectiveRest.Manager
 
             var request = new RestRequest(Method.POST);
             request.AddHeader("Authorization", "Bearer d966275a74bb1cc9667cff093852a34ba4f7a0df");
-            request.AddFile("image", "/Users/torna/Desktop/food1.jpg");
+            request.AddFile("image", "test.jpeg");
             IRestResponse response = client.Execute(request);
             Console.WriteLine(response.Content);
 
-            var list = JsonConvert.DeserializeObject<List<FoodFamily>>(response.Content);
+            Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(response.Content);
 
-            return new List<FoodFamily>(list);
+            return myDeserializedClass.recognition_results;
         }
         
 

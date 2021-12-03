@@ -33,7 +33,7 @@ namespace FoodDetectiveRest.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public List<FoodFamily> Post()
+        public List<RecognitionResult> Post()
         {
             return foodManager.GetFood();
         }
