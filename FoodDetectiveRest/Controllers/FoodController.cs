@@ -1,7 +1,10 @@
 ﻿using FoodDetectiveRest.Manager;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,6 +20,36 @@ namespace FoodDetectiveRest.Controllers
     {
         FoodManager foodManager = new FoodManager();
 
+       
+        // comments changes 
+        public static IWebHostEnvironment _environment;
+        public FoodController(IWebHostEnvironment environment)
+        {
+            _environment = environment;
+        }
+
+        public class FileUploadAPI
+        {
+            public IFormFile files { get; set; }
+        }
+
+        [HttpPost]
+        public  List<RecognitionResult> Post([FromForm]FileUploadAPI objFile)
+        {
+            try
+            {
+
+                return foodManager.GetFood(objFile);
+              
+            }
+            catch (Exception )
+            {
+
+                return null;
+            }
+
+        }
+
         // GET: api/<ValuesController>
         [HttpGet]
         public IEnumerable<string> Get()
@@ -31,13 +64,7 @@ namespace FoodDetectiveRest.Controllers
             return "value";
         }
 
-        // POST api/<ValuesController>
-        [HttpPost]
-        public List<RecognitionResult> Post()
-        {
-            return foodManager.GetFood();
-        }
-
+    
         // PUT api/<ValuesController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)

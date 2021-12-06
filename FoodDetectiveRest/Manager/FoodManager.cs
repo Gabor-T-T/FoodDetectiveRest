@@ -1,9 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static FoodDetectiveRest.Controllers.FoodController;
 
 namespace FoodDetectiveRest.Manager
 {
@@ -12,7 +15,7 @@ namespace FoodDetectiveRest.Manager
         public List<FoodFamily> _foods = new List<FoodFamily>();
 
 
-        public List<RecognitionResult> GetFood()
+        public List<RecognitionResult> GetFood(FileUploadAPI objFile)
         {
             
             var client = new RestClient("https://api.logmeal.es/v2/recognition/dish");
@@ -20,7 +23,7 @@ namespace FoodDetectiveRest.Manager
 
             var request = new RestRequest(Method.POST);
             request.AddHeader("Authorization", "Bearer d966275a74bb1cc9667cff093852a34ba4f7a0df");
-            request.AddFile("image", "test.jpeg");
+            request.AddFile("image", GetBytes(objFile),  "test.jpeg");
             IRestResponse response = client.Execute(request);
             Console.WriteLine(response.Content);
 
@@ -28,7 +31,14 @@ namespace FoodDetectiveRest.Manager
 
             return myDeserializedClass.recognition_results;
         }
-        
+        public static byte[] GetBytes(FileUploadAPI s)
+        {
+            using (var ms = new MemoryStream())
+            {
+                s.files.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
 
 
 
