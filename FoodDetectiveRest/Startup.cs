@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -44,6 +45,12 @@ namespace FoodDetectiveRest
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FoodDetectiveRest v1"));
             }
 
+           
+            app.UseSwaggerUI(options =>
+            {
+                options.RoutePrefix = "swagger/ui";
+            });
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -54,6 +61,8 @@ namespace FoodDetectiveRest
             {
                 endpoints.MapControllers();
             });
+
+          
         }
     }
 }
